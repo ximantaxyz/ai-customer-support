@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Dashboard</title>
+<style>
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --border: #475569;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--warning);
+  animation: pulse 2s infinite;
+}
+
+.status-dot.idle { background: var(--success); animation: none; }
+.status-dot.reading { background: var(--accent); }
+.status-dot.replying { background: var(--warning); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+
+.panel h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel h2::before {
+  content: '';
+  width: 6px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  border-left: 4px solid var(--accent);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.5s ease forwards;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow);
+}
+
+.card.email { border-left-color: #8b5cf6; }
+.card.telegram { border-left-color: #10b981; }
+.card.reply { border-left-color: #f59e0b; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.card-time {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.card-content {
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.5;
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  background: var(--border);
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
+.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 12px;
+  border-radius: var(--radius);
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.refresh-info {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="logo">
+      <h1>Support Dashboard</h1>
+    </div>
+    <div class="status-indicator">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Loading...</span>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <div class="feed-section">
+      <div class="panel">
+        <h2>Recent Activity</h2>
+        <div class="feed" id="activityFeed">
+          <div class="loading">Loading activity...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="panel">
+        <h2>System Status</h2>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value" id="emailCount">0</div>
+            <div class="stat-label">Emails Processed</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="telegramCount">0</div>
+            <div class="stat-label">Telegram Messages</div>
+          </div>
+        </div>
+        
+        <div class="controls">
+          <button class="btn btn-primary" id="refreshBtn">Refresh Now</button>
+          <button class="btn btn-secondary" id="clearFeedBtn">Clear Feed View</button>
+          <div class="theme-toggle" id="themeToggle">
+            <span>Toggle Theme</span>
+          </div>
+        </div>
+        
+        <div class="refresh-info" id="lastUpdate">
+          Last update: Never
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+class SupportDashboard {
+  constructor() {
+    this.baseUrl = 'http://localhost:3000';
+    this.feeds = { emails: [], telegram: [] };
+    this.status = { status: 'idle', emailCount: 0, telegramCount: 0 };
+    this.lastUpdate = null;
+    this.theme = 'dark';
+    this.lastActivityIds = { emails: new Set(), telegram: new Set() };
+    this.init();
+  }
+
+  init() {
+    this.bindEvents();
+    this.loadData();
+    this.startPolling();
+    this.applyTheme();
+  }
+
+  bindEvents() {
+    document.getElementById('refreshBtn').addEventListener('click', () => this.loadData());
+    document.getElementById('clearFeedBtn').addEventListener('click', () => this.clearFeedView());
+    document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+  }
+
+  async loadData() {
+    try {
+      const [statusData, emailsData, telegramData] = await Promise.all([
+        this.fetchWithTimeout(`${this.baseUrl}/status`),
+        this.fetchWithTimeout(`${this.baseUrl}/emails`),
+        this.fetchWithTimeout(`${this.baseUrl}/telegram`)
+      ]);
+      
+      if (statusData) this.status = statusData;
+      if (emailsData) this.feeds.emails = emailsData;
+      if (telegramData) this.feeds.telegram = telegramData;
+      
+      this.updateUI();
+      this.lastUpdate = new Date();
+      this.updateLastUpdateTime();
+    } catch (error) {
+      this.showError('Failed to load data. Server may be offline.');
+    }
+  }
+
+  async fetchWithTimeout(url) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.warn('Fetch failed:', error.message);
+      return null;
+    }
+  }
+
+  updateUI() {
+    this.updateStatus();
+    this.updateCounts();
+    this.renderActivityFeed();
+  }
+
+  updateStatus() {
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    
+    if (statusDot && statusText && this.status.status) {
+      statusDot.className = 'status-dot ' + this.status.status;
+      const statusTextFormatted = this.status.status.charAt(0).toUpperCase() + this.status.status.slice(1);
+      statusText.textContent = statusTextFormatted;
+    }
+  }
+
+  updateCounts() {
+    const emailCountEl = document.getElementById('emailCount');
+    const telegramCountEl = document.getElementById('telegramCount');
+    
+    if (emailCountEl) {
+      emailCountEl.textContent = this.status.emailCount || 0;
+    }
+    if (telegramCountEl) {
+      telegramCountEl.textContent = this.status.telegramCount || 0;
+    }
+  }
+
+  renderActivityFeed() {
+    const feedContainer = document.getElementById('activityFeed');
+    if (!feedContainer) return;
+    
+    const allActivity = [];
+    
+    if (Array.isArray(this.feeds.emails)) {
+      this.feeds.emails.forEach(email => {
+        if (email && email.id) {
+          allActivity.push({
+            id: 'email-' + email.id,
+            type: 'email',
+            title: this.truncateText(email.from || 'Unknown sender', 30),
+            content: email.body || '',
+            time: email.timestamp,
+            reply: email.reply
+          });
+        }
+      });
+    }
+    
+    if (Array.isArray(this.feeds.telegram)) {
+      this.feeds.telegram.forEach(msg => {
+        if (msg && msg.id) {
+          allActivity.push({
+            id: 'telegram-' + msg.id,
+            type: 'telegram',
+            title: 'Telegram Message',
+            content: msg.text || '',
+            time: msg.timestamp,
+            reply: msg.reply
+          });
+        }
+      });
+    }
+    
+    allActivity.sort((a, b) => new Date(b.time || 0) - new Date(a.time || 0));
+    const displayActivity = allActivity.slice(0, 15);
+    
+    if (displayActivity.length === 0) {
+      feedContainer.innerHTML = '<div class="empty-state">No activity yet. Waiting for emails or messages...</div>';
+      return;
+    }
+    
+    const newActivityIds = new Set(displayActivity.map(item => item.id));
+    const hasNewItems = displayActivity.some(item => !this.lastActivityIds.has(item.id));
+    
+    if (hasNewItems) {
+      feedContainer.innerHTML = displayActivity.map(item => this.createActivityCard(item)).join('');
+      this.lastActivityIds = newActivityIds;
+      
+      const cards = feedContainer.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+      });
+    }
+  }
+
+  createActivityCard(item) {
+    const time = item.time ? new Date(item.time).toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      day: '2-digit',
+      month: 'short'
+    }) : 'Unknown time';
+    
+    const typeClass = item.type === 'email' ? 'email' : 'telegram';
+    const typeIcon = item.type === 'email' ? '📧' : '📱';
+    const content = this.escapeHtml(this.truncateText(item.content || '', 150));
+    const reply = item.reply ? this.escapeHtml(this.truncateText(item.reply, 100)) : '';
+    
+    return `
+      <div class="card ${typeClass}">
+        <div class="card-header">
+          <div class="card-title">${typeIcon} ${item.title}</div>
+          <div class="card-time">${time}</div>
+        </div>
+        <div class="card-content">${content}</div>
+        ${reply ? `<div class="card-content" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+          <strong>Reply:</strong> ${reply}
+        </div>` : ''}
+      </div>
+    `;
+  }
+
+  clearFeedView() {
+    const feedContainer = document.getElementById('activityFeed');
+    if (feedContainer) {
+      feedContainer.innerHTML = '<div class="empty-state">Feed view cleared. New activity will appear automatically.</div>';
+      this.lastActivityIds.clear();
+    }
+  }
+
+  toggleTheme() {
+    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    const root = document.documentElement;
+    if (this.theme === 'light') {
+      root.style.setProperty('--bg-primary', '#f8fafc');
+      root.style.setProperty('--bg-secondary', '#e2e8f0');
+      root.style.setProperty('--bg-card', '#ffffff');
+      root.style.setProperty('--text-primary', '#1e293b');
+      root.style.setProperty('--text-secondary', '#64748b');
+      root.style.setProperty('--border', '#cbd5e1');
+      root.style.setProperty('--shadow', 'rgba(0, 0, 0, 0.1)');
+    } else {
+      root.style.setProperty('--bg-primary', '#0f172a');
+      root.style.setProperty('--bg-secondary', '#1e293b');
+      root.style.setProperty('--bg-card', '#334155');
+      root.style.setProperty('--text-primary', '#f1f5f9');
+      root.style.setProperty('--text-secondary', '#cbd5e1');
+      root.style.setProperty('--border', '#475569');
+      root.style.setProperty('--shadow', 'rgba(0, 0, 0, 0.3)');
+    }
+  }
+
+  updateLastUpdateTime() {
+    const element = document.getElementById('lastUpdate');
+    if (element && this.lastUpdate) {
+      const time = this.lastUpdate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      element.textContent = `Last update: ${time}`;
+    }
+  }
+
+  startPolling() {
+    setInterval(() => this.loadData(), 10000);
+  }
+
+  showError(message) {
+    const feedContainer = document.getElementById('activityFeed');
+    if (feedContainer) {
+      const existingError = feedContainer.querySelector('.error');
+      if (!existingError) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.textContent = message;
+        errorDiv.style.animation = 'fadeIn 0.5s ease';
+        feedContainer.insertBefore(errorDiv, feedContainer.firstChild);
+        
+        setTimeout(() => {
+          if (errorDiv.parentNode === feedContainer) {
+            feedContainer.removeChild(errorDiv);
+          }
+        }, 5000);
+      }
+    }
+  }
+
+  truncateText(text, maxLength) {
+    if (!text || text.length <= maxLength) return text || '';
+    return text.substring(0, maxLength) + '...';
+  }
+
+  escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML.replace(/\n/g, '<br>');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  new SupportDashboard();
+});
+</script>
+</body>
+</html>

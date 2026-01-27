@@ -1,0 +1,12 @@
+{
+  "port": 3000,
+  "gmail": {
+    "clientId": "YOUR_GMAIL_CLIENT_ID",
+    "clientSecret": "YOUR_GMAIL_CLIENT_SECRET",
+    "redirectUri": "http://localhost:3000/oauth2callback"
+  },
+  "telegram": {
+    "botToken": "YOUR_TELEGRAM_BOT_TOKEN",
+    "chatId": "YOUR_TELEGRAM_CHAT_ID"
+  }
+}
