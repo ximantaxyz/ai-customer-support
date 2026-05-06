@@ -550,10 +550,8 @@ This project is intended for personal and educational use. Feel free to modify a
 
 **Ximanta**
 
-- GitHub: [<img src="https://github.githubassets.com/favicons/favicon.svg" width="16" height="16" style="vertical-align: middle;">](https://github.com/tukuexe) [@tukuexe](https://github.com/tukuexe)
-- Instagram: [<img src="https://static.cdninstagram.com/rsrc.php/v3/yR/r/lam-fZmwmvn.png" width="16" height="16" style="vertical-align: middle;">](https://instagram.com/ximanta.xyz) [@ximanta.xyz](https://instagram.com/ximanta.xyz)
-- Telegram: [<img src="https://telegram.org/favicon.ico" width="16" height="16" style="vertical-align: middle;">](https://t.me/tukuexe) [@tukuexe](https://t.me/tukuexe)
-- Website: [<img src="https://about.ximanta.space/favicon.ico" width="16" height="16" style="vertical-align: middle;">](https://about.ximanta.space) [about.ximanta.space](https://about.ximanta.space)
+- GitHub: [<img src="https://github.githubassets.com/favicons/favicon.svg" width="16" height="16" style="vertical-align: middle;">](https://github.com/ximantaxyz) [@ximantaxyz](https://github.com/ximantaxyz)
+- Instagram: [<img src="https://static.cdninstagram.com/rsrc.php/v3/yR/r/lam-fZmwmvn.png" width="16" height="16" style="vertical-align: middle;">](https://instagram.com/b4nzw) [@ximanta.xyz](https://instagram.com/ximanta.xyz) src="https://about.ximanta.xyz/favicon.ico" width="16" height="16" style="vertical-align: middle;">](https://about.ximanta.xyz) [about.ximanta.xyz](https://about.ximanta.xyz)
 
 ---
 
